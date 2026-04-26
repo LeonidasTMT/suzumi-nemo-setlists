@@ -291,6 +291,15 @@
             from { opacity: 0; transform: translateY(8px);}
             to { opacity: 1; transform: translateY(0);}
         }
+
+        /* Fix for search inputs in songs/artists tabs - white text */
+        .search-section input {
+            color: white !important;
+            background: #071c2c !important;
+        }
+        .search-section input::placeholder {
+            color: #8aaec0;
+        }
     </style>
 </head>
 <body>
@@ -344,8 +353,7 @@
     <div id="songsTab" class="tab-content">
         <div class="glass-panel" style="padding:1rem;">
             <div class="search-section" style="display:flex; gap:0.8rem; margin-bottom:1rem;">
-                <input type="text" id="songSearchInput" placeholder="Enter song name..." style="flex:1; background:#071c2c; border:1px solid #5bc0ff; border-radius:40px; padding:0.6rem 1rem; color:white;" data-i18n-placeholder="songSearchPlaceholder">
-                <button id="searchSongBtn" class="btn-filter" data-i18n="showDetailBtn">Show details</button>
+                <input type="text" id="songSearchInput" placeholder="Filter songs..." style="flex:1; background:#071c2c; border:1px solid #5bc0ff; border-radius:40px; padding:0.6rem 1rem; color:white;" data-i18n-placeholder="songSearchPlaceholder">
             </div>
             <div style="overflow-x: auto;">
                 <table class="data-table" id="songsTable">
@@ -359,8 +367,7 @@
     <div id="artistsTab" class="tab-content">
         <div class="glass-panel" style="padding:1rem;">
             <div class="search-section" style="display:flex; gap:0.8rem; margin-bottom:1rem;">
-                <input type="text" id="artistSearchInput" placeholder="Artist name..." style="flex:1; background:#071c2c; border:1px solid #5bc0ff; border-radius:40px; padding:0.6rem 1rem;" data-i18n-placeholder="artistSearchPlaceholder">
-                <button id="searchArtistBtn" class="btn-filter" data-i18n="showDetailBtn">Show details</button>
+                <input type="text" id="artistSearchInput" placeholder="Filter artists..." style="flex:1; background:#071c2c; border:1px solid #5bc0ff; border-radius:40px; padding:0.6rem 1rem; color:white;" data-i18n-placeholder="artistSearchPlaceholder">
             </div>
             <div style="overflow-x: auto;">
                 <table class="data-table" id="artistsTable">
@@ -404,9 +411,8 @@
             tabVideos: "🎬 Live Setlists",
             tabSongs: "🎤 Song Ranking",
             tabArtists: "⭐ Artist Insights",
-            songSearchPlaceholder: "Enter song name...",
-            artistSearchPlaceholder: "Enter artist name...",
-            showDetailBtn: "Show details",
+            songSearchPlaceholder: "Filter songs...",
+            artistSearchPlaceholder: "Filter artists...",
             songNameHeader: "🎵 Song name ⬍",
             performanceHeader: "🎭 Performances ⬍",
             artistNameHeader: "⭐ Artist ⬍",
@@ -449,9 +455,8 @@
             tabVideos: "🎬 ライブセットリスト",
             tabSongs: "🎤 楽曲ランキング",
             tabArtists: "⭐ アーティスト深掘り",
-            songSearchPlaceholder: "楽曲名を入力...",
-            artistSearchPlaceholder: "アーティスト名...",
-            showDetailBtn: "詳細表示",
+            songSearchPlaceholder: "楽曲をフィルター...",
+            artistSearchPlaceholder: "アーティストをフィルター...",
             songNameHeader: "🎵 楽曲名 ⬍",
             performanceHeader: "🎭 歌唱回数 ⬍",
             artistNameHeader: "⭐ アーティスト ⬍",
@@ -487,6 +492,8 @@
     let textSearchQuery = "";
     let currentSongSort = { field: "count", direction: "desc" };
     let currentArtistSort = { field: "count", direction: "desc" };
+    let currentSongFilter = "";
+    let currentArtistFilter = "";
     
     function t(key, ...args) {
         let str = translations[currentLang]?.[key] || translations["en"][key] || key;
@@ -615,10 +622,21 @@
     }
     
     function renderSongsTable() {
-        if (!allSongsArray.length) { document.getElementById("songsTableBody").innerHTML = `<tr><td colspan="2">${t("noVideosMatch")}</td></tr>`; return; }
-        let sorted = [...allSongsArray];
-        if (currentSongSort.field === "name") sorted.sort((a,b) => currentSongSort.direction === "asc" ? a.song.localeCompare(b.song) : b.song.localeCompare(a.song));
-        else sorted.sort((a,b) => currentSongSort.direction === "asc" ? a.count - b.count : b.count - a.count);
+        if (!allSongsArray.length) { 
+            document.getElementById("songsTableBody").innerHTML = `<tr><td colspan="2">${t("noVideosMatch")}</td></tr>`; 
+            return; 
+        }
+        let filtered = [...allSongsArray];
+        if (currentSongFilter) {
+            const lowerFilter = currentSongFilter.toLowerCase();
+            filtered = filtered.filter(s => s.song.toLowerCase().includes(lowerFilter));
+        }
+        let sorted = [...filtered];
+        if (currentSongSort.field === "name") {
+            sorted.sort((a,b) => currentSongSort.direction === "asc" ? a.song.localeCompare(b.song) : b.song.localeCompare(a.song));
+        } else {
+            sorted.sort((a,b) => currentSongSort.direction === "asc" ? a.count - b.count : b.count - a.count);
+        }
         const tbody = document.getElementById("songsTableBody");
         tbody.innerHTML = sorted.map(song => `<tr data-song-name="${escapeHtml(song.song)}"><td style="color:#b9f2ff;">${escapeHtml(song.song)}</td><td><strong>${song.count}</strong> ${t("songsUnit")}</td></tr>`).join('');
         document.querySelectorAll("#songsTableBody tr").forEach(row => row.addEventListener("click", () => showFullSongDetail(row.getAttribute("data-song-name"))));
@@ -638,10 +656,21 @@
     }
     
     function renderArtistsTable() {
-        if (!allArtistsArray.length) { document.getElementById("artistsTableBody").innerHTML = `<tr><td colspan="2">${t("noVideosMatch")}</td></tr>`; return; }
-        let sorted = [...allArtistsArray];
-        if (currentArtistSort.field === "name") sorted.sort((a,b) => currentArtistSort.direction === "asc" ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name));
-        else sorted.sort((a,b) => currentArtistSort.direction === "asc" ? a.total_performances - b.total_performances : b.total_performances - a.total_performances);
+        if (!allArtistsArray.length) { 
+            document.getElementById("artistsTableBody").innerHTML = `<tr><td colspan="2">${t("noVideosMatch")}</td></tr>`; 
+            return; 
+        }
+        let filtered = [...allArtistsArray];
+        if (currentArtistFilter) {
+            const lowerFilter = currentArtistFilter.toLowerCase();
+            filtered = filtered.filter(a => a.name.toLowerCase().includes(lowerFilter));
+        }
+        let sorted = [...filtered];
+        if (currentArtistSort.field === "name") {
+            sorted.sort((a,b) => currentArtistSort.direction === "asc" ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name));
+        } else {
+            sorted.sort((a,b) => currentArtistSort.direction === "asc" ? a.total_performances - b.total_performances : b.total_performances - a.total_performances);
+        }
         const tbody = document.getElementById("artistsTableBody");
         tbody.innerHTML = sorted.map(artist => `<tr data-artist-name="${escapeHtml(artist.name)}"><td style="color:#b9f2ff;">${escapeHtml(artist.name)}</td><td><strong>${artist.total_performances}</strong> ${t("songsUnit")}</td></tr>`).join('');
         document.querySelectorAll("#artistsTableBody tr").forEach(row => row.addEventListener("click", () => showFullArtistDetail(row.getAttribute("data-artist-name"))));
@@ -709,8 +738,15 @@
             btn.classList.remove('active');
             if (btn.getAttribute('data-tab') === tabId) btn.classList.add('active');
         });
-        if (tabId === 'songs') renderSongsTable();
-        if (tabId === 'artists') renderArtistsTable();
+        if (tabId === 'songs') {
+            renderSongsTable();
+            // Re-attach sort listeners after rerender?
+            setupSorting("songsTable", currentSongSort, renderSongsTable);
+        }
+        if (tabId === 'artists') {
+            renderArtistsTable();
+            setupSorting("artistsTable", currentArtistSort, renderArtistsTable);
+        }
     }
     
     function setLanguage(lang) {
@@ -735,8 +771,19 @@
         applyAllFilters();
     });
     document.getElementById("searchInput").addEventListener("input", (e) => { textSearchQuery = e.target.value; applyAllFilters(); });
-    document.getElementById("searchSongBtn").addEventListener("click", () => { const name = document.getElementById("songSearchInput").value.trim(); if(name) showFullSongDetail(name); });
-    document.getElementById("searchArtistBtn").addEventListener("click", () => { const name = document.getElementById("artistSearchInput").value.trim(); if(name) showFullArtistDetail(name); });
+    
+    // Dynamic filtering for songs and artists
+    document.getElementById("songSearchInput").addEventListener("input", (e) => {
+        currentSongFilter = e.target.value;
+        renderSongsTable();
+        setupSorting("songsTable", currentSongSort, renderSongsTable);
+    });
+    document.getElementById("artistSearchInput").addEventListener("input", (e) => {
+        currentArtistFilter = e.target.value;
+        renderArtistsTable();
+        setupSorting("artistsTable", currentArtistSort, renderArtistsTable);
+    });
+    
     document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.getAttribute('data-tab'))));
     document.querySelectorAll(".lang-btn").forEach(btn => btn.addEventListener("click", () => setLanguage(btn.getAttribute("data-lang"))));
     
