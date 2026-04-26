@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>🌑 涼海ネモ · 歌枠セットリスト / Singing Slot Setlist</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', 'Noto Sans', sans-serif;
+            background: radial-gradient(ellipse at 30% 40%, #0B1A2F 0%, #030A15 100%);
+            color: #E2F0FF;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
+
+        .glass-panel {
+            background: rgba(8, 28, 48, 0.6);
+            backdrop-filter: blur(14px);
+            border-radius: 2rem;
+            border: 1px solid rgba(90, 200, 250, 0.3);
+            box-shadow: 0 12px 30px rgba(0, 10, 20, 0.5);
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem 1.5rem 1.8rem;
+            background: linear-gradient(135deg, #081c2c, #02111f);
+            border-bottom: 3px solid #5bc0ff;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: "🌑";
+            position: absolute;
+            font-size: 7rem;
+            opacity: 0.08;
+            right: 1rem;
+            top: -1rem;
+            pointer-events: none;
+        }
+        .header h1 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #A0E9FF, #5BC0FF, #9AE6B4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+        .header p {
+            opacity: 0.85;
+            font-size: 0.95rem;
+            margin-top: 0.4rem;
+        }
+        .lang-switch {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.5rem;
+            display: flex;
+            gap: 0.5rem;
+            background: rgba(0,0,0,0.4);
+            padding: 0.3rem 0.6rem;
+            border-radius: 60px;
+            backdrop-filter: blur(4px);
+            z-index: 10;
+        }
+        .lang-btn {
+            background: none;
+            border: none;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #cae9ff;
+            cursor: pointer;
+            padding: 0.2rem 0.6rem;
+            border-radius: 30px;
+            transition: 0.1s;
+        }
+        .lang-btn.active {
+            background: #5bc0ff;
+            color: #02131f;
+            box-shadow: 0 0 6px #5bc0ff;
+        }
+        .stats-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.2rem;
+            margin: 1.5rem 0 0.8rem;
+        }
+        .stat-card {
+            background: #0F2538;
+            border-radius: 2rem;
+            padding: 0.6rem 2rem;
+            min-width: 120px;
+            text-align: center;
+            border: 1px solid #5bc0ff40;
+            backdrop-filter: blur(4px);
+            transition: 0.2s;
+        }
+        .stat-card:hover {
+            border-color: #5bc0ff;
+            background: #123a52;
+        }
+        .stat-number {
+            font-size: 2.1rem;
+            font-weight: 800;
+            color: #b9f2ff;
+            text-shadow: 0 0 5px #00a6c4;
+        }
+        .search-wrapper {
+            max-width: 680px;
+            margin: 1.2rem auto 0;
+            padding: 0 1rem;
+            position: relative;
+        }
+        #searchInput {
+            width: 100%;
+            padding: 0.9rem 1.5rem 0.9rem 2.8rem;
+            background: #071a29;
+            border: 2px solid #5bc0ff80;
+            border-radius: 60px;
+            font-size: 0.95rem;
+            color: #F0FCFF;
+            outline: none;
+            transition: 0.2s;
+        }
+        #searchInput:focus {
+            border-color: #5bc0ff;
+            box-shadow: 0 0 0 3px #5bc0ff40;
+        }
+        .search-icon {
+            position: absolute;
+            left: 1.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            opacity: 0.7;
+        }
+        .filter-bar {
+            max-width: 1300px;
+            margin: 1rem auto 1.5rem;
+            padding: 1rem 1.5rem;
+            background: rgba(7, 22, 38, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            border: 1px solid #5bc0ff40;
+        }
+        .filter-group label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #a3e4ff;
+            margin-bottom: 0.2rem;
+        }
+        .filter-group select, .filter-group input {
+            background: #071c2c;
+            border: 1px solid #5bc0ff66;
+            border-radius: 40px;
+            padding: 0.5rem 0.9rem;
+            font-size: 0.85rem;
+            color: #EFF9FF;
+        }
+        .btn-filter {
+            background: #5bc0ff;
+            border: none;
+            padding: 0.5rem 1.3rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #02131f;
+            transition: 0.15s;
+        }
+        .btn-filter:hover { background: #89d4ff; transform: scale(0.97);}
+        .btn-reset { background: #2c4b6e; color: #EFF9FF; }
+        .btn-reset:hover { background: #3f668b; }
+        .filter-stats {
+            font-size: 0.75rem;
+            color: #b9e6ff;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .tab-btn {
+            background: rgba(7, 26, 42, 0.85);
+            border: 1px solid #5bc0ff60;
+            color: #cae9ff;
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            backdrop-filter: blur(4px);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .tab-btn.active {
+            background: linear-gradient(105deg, #5bc0ff, #9ae6b4);
+            color: #01131f;
+            border: none;
+            box-shadow: 0 6px 14px rgba(91, 192, 255, 0.3);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+            animation: fadeUp 0.25s ease;
+        }
+        .video-grid {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        }
+        .video-card {
+            background: #0F2538CC;
+            backdrop-filter: blur(4px);
+            border-radius: 1.6rem;
+            padding: 1.2rem;
+            cursor: pointer;
+            transition: 0.25s ease;
+            border: 1px solid #2f6f92;
+        }
+        .video-card:hover {
+            transform: translateY(-6px);
+            background: #1c405b;
+            border-color: #9ae6b4;
+            box-shadow: 0 20px 28px -12px rgba(0, 30, 60, 0.6);
+        }
+        .timestamp-badge {
+            background: #031d2d;
+            padding: 0.2rem 0.7rem;
+            border-radius: 60px;
+            font-family: monospace;
+            font-size: 0.7rem;
+            border: 1px solid #5bc0ff60;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #071e2e;
+            border-radius: 1.5rem;
+            overflow: hidden;
+        }
+        .data-table th, .data-table td {
+            padding: 0.8rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #2f6080;
+        }
+        .data-table th {
+            background: #0a2a40;
+            color: #b9f2ff;
+            cursor: pointer;
+            user-select: none;
+        }
+        .data-table th:hover { background: #1e4b6e; }
+        .data-table tr:hover { background: #5bc0ff20; cursor: pointer; }
+        .modal-content {
+            background: #0F2A3F;
+            backdrop-filter: blur(20px);
+            border: 2px solid #9ae6b4;
+            color: #E8F3FF;
+        }
+        .close-modal { color: #ffb3d9; font-weight: bold; }
+        a { color: #86d6ff; text-decoration: none; }
+        a:hover { color: #c0edff; text-decoration: underline; }
+        .detail-card {
+            background: #0a1f30;
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            margin-top: 1rem;
+            border-left: 6px solid #9ae6b4;
+        }
+        .load-trigger-sentinel {
+            height: 10px;
+            width: 100%;
+            opacity: 0;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: #6c9eb8;
+            font-size: 0.75rem;
+            border-top: 1px solid #2f608050;
+            margin-top: 2rem;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(8px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="lang-switch">
+        <button class="lang-btn active" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="jp">日本語</button>
+    </div>
+    <h1>🌑 涼海ネモ · 歌枠セットリスト</h1>
+    <p data-i18n="subtitle">📋 Complete archive of Nemo's singing slot performances</p>
+    <div class="stats-grid">
+        <div class="stat-card"><div class="stat-number" id="totalVideos">—</div><div data-i18n="statVideos">📼 Streams</div></div>
+        <div class="stat-card"><div class="stat-number" id="totalSongs">—</div><div data-i18n="statPerformances">🎙️ Performances</div></div>
+        <div class="stat-card"><div class="stat-number" id="totalArtists">—</div><div data-i18n="statArtists">🎤 Artists</div></div>
+    </div>
+    <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="曲名・アーティスト・動画タイトルを検索...">
+    </div>
+</div>
+
+<div class="filter-bar">
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end;">
+        <div class="filter-group"><label data-i18n="dateFromLabel">📅 Date from</label><input type="date" id="dateFrom"></div>
+        <div class="filter-group"><label data-i18n="dateToLabel">📅 Date to</label><input type="date" id="dateTo"></div>
+        <div class="filter-group"><label data-i18n="sortLabel">⬇️ Sort by</label>
+            <select id="sortBy">
+                <option value="date_desc" data-i18n="sortNewest">Newest first</option>
+                <option value="date_asc" data-i18n="sortOldest">Oldest first</option>
+                <option value="songcount_desc" data-i18n="sortMostSongs">Most songs</option>
+                <option value="title_asc" data-i18n="sortTitleAZ">Title A–Z</option>
+            </select>
+        </div>
+        <div style="display: flex; gap: 0.5rem;"><button id="applyFiltersBtn" class="btn-filter" data-i18n="applyBtn">Apply</button><button id="resetFiltersBtn" class="btn-filter btn-reset" data-i18n="resetBtn">Reset</button></div>
+    </div>
+    <div id="filterStats" class="filter-stats"></div>
+</div>
+
+<div class="tabs" style="display: flex; justify-content: center; gap: 1rem; margin: 1rem 0 1.5rem;">
+    <button class="tab-btn active" data-tab="videos" data-i18n="tabVideos">🎬 Live Setlists</button>
+    <button class="tab-btn" data-tab="songs" data-i18n="tabSongs">🎤 Song Ranking</button>
+    <button class="tab-btn" data-tab="artists" data-i18n="tabArtists">⭐ Artist Insights</button>
+</div>
+
+<div class="content-section" style="max-width:1400px; margin:0 auto 3rem; padding:0 1.2rem;">
+    <div id="videosTab" class="tab-content active">
+        <div id="videoGrid" class="video-grid"><div class="glass-panel" style="padding:2rem; text-align:center;">🌊 Loading Nemo's setlists...</div></div>
+        <div id="scrollSentinel" class="load-trigger-sentinel"></div>
+    </div>
+    <div id="songsTab" class="tab-content">
+        <div class="glass-panel" style="padding:1rem;">
+            <div class="search-section" style="display:flex; gap:0.8rem; margin-bottom:1rem;">
+                <input type="text" id="songSearchInput" placeholder="Enter song name..." style="flex:1; background:#071c2c; border:1px solid #5bc0ff; border-radius:40px; padding:0.6rem 1rem; color:white;" data-i18n-placeholder="songSearchPlaceholder">
+                <button id="searchSongBtn" class="btn-filter" data-i18n="showDetailBtn">Show details</button>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="data-table" id="songsTable">
+                    <thead><tr><th data-sort="name" data-i18n="songNameHeader">🎵 Song name ⬍</th><th data-sort="count" data-i18n="performanceHeader">🎭 Performances ⬍</th></tr></thead>
+                    <tbody id="songsTableBody"></tbody>
+                </table>
+            </div>
+            <div id="songDetailContainer"></div>
+        </div>
+    </div>
+    <div id="artistsTab" class="tab-content">
+        <div class="glass-panel" style="padding:1rem;">
+            <div class="search-section" style="display:flex; gap:0.8rem; margin-bottom:1rem;">
+                <input type="text" id="artistSearchInput" placeholder="Artist name..." style="flex:1; background:#071c2c; border:1px solid #5bc0ff; border-radius:40px; padding:0.6rem 1rem;" data-i18n-placeholder="artistSearchPlaceholder">
+                <button id="searchArtistBtn" class="btn-filter" data-i18n="showDetailBtn">Show details</button>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="data-table" id="artistsTable">
+                    <thead><tr><th data-sort="name" data-i18n="artistNameHeader">⭐ Artist ⬍</th><th data-sort="count" data-i18n="totalPerformancesHeader">🎤 Total performances ⬍</th></tr></thead>
+                    <tbody id="artistsTableBody"></tbody>
+                </table>
+            </div>
+            <div id="artistDetailContainer"></div>
+        </div>
+    </div>
+</div>
+<footer data-i18n="footer">🌑 涼海ネモ · Singing Slot Setlist Explorer · 全ての歌を海の彼方へ</footer>
+
+<div id="analyticsModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); backdrop-filter:blur(12px); align-items:center; justify-content:center; z-index:2000;">
+    <div class="modal-content" style="max-width:800px; width:90%; max-height:85vh; border-radius:2rem; padding:1.5rem; overflow-y:auto;">
+        <span class="close-modal" style="float:right; font-size:1.8rem; cursor:pointer;">&times;</span>
+        <h2 id="modalTitle"></h2>
+        <div id="modalBody"></div>
+        <div id="modalExtraLink" style="margin-top:1rem;"></div>
+    </div>
+</div>
+
+<script>
+    // ---------- Bilingual dictionary (EN + JP) ----------
+    const translations = {
+        en: {
+            subtitle: "📋 Complete archive of Nemo's singing slot performances",
+            statVideos: "📼 Streams",
+            statPerformances: "🎙️ Performances",
+            statArtists: "🎤 Artists",
+            searchPlaceholder: "search by song, artist, video title...",
+            dateFromLabel: "📅 Date from",
+            dateToLabel: "📅 Date to",
+            sortLabel: "⬇️ Sort by",
+            sortNewest: "Newest first",
+            sortOldest: "Oldest first",
+            sortMostSongs: "Most songs",
+            sortTitleAZ: "Title A–Z",
+            applyBtn: "Apply",
+            resetBtn: "Reset",
+            tabVideos: "🎬 Live Setlists",
+            tabSongs: "🎤 Song Ranking",
+            tabArtists: "⭐ Artist Insights",
+            songSearchPlaceholder: "Enter song name...",
+            artistSearchPlaceholder: "Enter artist name...",
+            showDetailBtn: "Show details",
+            songNameHeader: "🎵 Song name ⬍",
+            performanceHeader: "🎭 Performances ⬍",
+            artistNameHeader: "⭐ Artist ⬍",
+            totalPerformancesHeader: "🎤 Total performances ⬍",
+            footer: "🌑 涼海ネモ · Singing Slot Setlist Explorer",
+            noVideosMatch: "✨ No streams match ✨\nTry different filters",
+            loadingVideos: "🌊 Loading Nemo's setlists...",
+            songsUnit: "songs",
+            moreSongs: "more",
+            dateUnknown: "unknown date",
+            setlist: "Setlist",
+            watchMoment: "▶ jump to moment",
+            watchFull: "🎬 Watch on YouTube",
+            streamDate: "Stream date",
+            totalPerformancesDetail: "Total performances",
+            artistsWhoPerformed: "Artists who performed",
+            appearsInVideos: "Appears in videos",
+            watch: "▶ listen",
+            totalPerformancesArtist: "Total performances",
+            uniqueSongs: "unique songs",
+            appearsInStreams: "Appears in streams",
+            filterStatsTemplate: (count) => `🎯 ${count} video(s) match · 涼海ネモ ♡`,
+            modalSetlist: "Setlist",
+        },
+        jp: {
+            subtitle: "📋 涼海ネモの歌枠アーカイブ",
+            statVideos: "📼 配信映像",
+            statPerformances: "🎙️ 歌唱回数",
+            statArtists: "🎤 アーティスト",
+            searchPlaceholder: "曲名・アーティスト・動画タイトルを検索...",
+            dateFromLabel: "📅 配信日 (開始)",
+            dateToLabel: "📅 配信日 (終了)",
+            sortLabel: "⬇️ 並び替え",
+            sortNewest: "新しい順",
+            sortOldest: "古い順",
+            sortMostSongs: "歌唱数が多い順",
+            sortTitleAZ: "タイトル A→Z",
+            applyBtn: "適用",
+            resetBtn: "リセット",
+            tabVideos: "🎬 ライブセットリスト",
+            tabSongs: "🎤 楽曲ランキング",
+            tabArtists: "⭐ アーティスト深掘り",
+            songSearchPlaceholder: "楽曲名を入力...",
+            artistSearchPlaceholder: "アーティスト名...",
+            showDetailBtn: "詳細表示",
+            songNameHeader: "🎵 楽曲名 ⬍",
+            performanceHeader: "🎭 歌唱回数 ⬍",
+            artistNameHeader: "⭐ アーティスト ⬍",
+            totalPerformancesHeader: "🎤 歌唱総数 ⬍",
+            footer: "🌑 涼海ネモ · 歌枠セットリストエクスプローラー",
+            noVideosMatch: "✨ 該当する配信が見つかりませんでした ✨\n検索条件を変えてみてね",
+            loadingVideos: "🌊 ネモのセットリストを読み込み中...",
+            songsUnit: "曲",
+            moreSongs: "曲以上",
+            dateUnknown: "日付不明",
+            setlist: "セットリスト",
+            watchMoment: "▶ 該当箇所へ",
+            watchFull: "🎬 YouTubeで視聴",
+            streamDate: "配信日",
+            totalPerformancesDetail: "総歌唱回数",
+            artistsWhoPerformed: "歌唱アーティスト",
+            appearsInVideos: "登場動画",
+            watch: "▶ 聴く",
+            totalPerformancesArtist: "登場回数",
+            uniqueSongs: "曲数",
+            appearsInStreams: "登場配信",
+            filterStatsTemplate: (count) => `🎯 ${count} 件の映像 · 涼海ネモと一緒に歌おう 🌙`,
+            modalSetlist: "セットリスト",
+        }
+    };
+    
+    let currentLang = "en";
+    let globalVideos = [], allSongsArray = [], allArtistsArray = [];
+    let filteredVideos = [];
+    let displayedCount = 20;
+    let isLoadingMore = false;
+    let activeFilters = { dateFrom: "", dateTo: "", sortBy: "date_desc" };
+    let textSearchQuery = "";
+    let currentSongSort = { field: "count", direction: "desc" };
+    let currentArtistSort = { field: "count", direction: "desc" };
+    
+    function t(key, ...args) {
+        let str = translations[currentLang]?.[key] || translations["en"][key] || key;
+        if (typeof str === "function") return str(...args);
+        return str;
+    }
+    
+    function updateStaticTexts() {
+        document.querySelectorAll("[data-i18n]").forEach(el => {
+            const key = el.getAttribute("data-i18n");
+            if (key && !el.classList.contains("lang-btn")) el.textContent = t(key);
+        });
+        document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+            const key = el.getAttribute("data-i18n-placeholder");
+            if (key) el.placeholder = t(key);
+        });
+        document.querySelectorAll("#sortBy option").forEach(opt => {
+            const key = opt.getAttribute("data-i18n");
+            if (key) opt.textContent = t(key);
+        });
+        updateFilterStatsText();
+        if (globalVideos.length) {
+            renderVideos();
+            renderSongsTable();
+            renderArtistsTable();
+        }
+    }
+    
+    function updateFilterStatsText() {
+        const statsDiv = document.getElementById("filterStats");
+        if (filteredVideos !== undefined) statsDiv.innerHTML = t("filterStatsTemplate", filteredVideos.length);
+    }
+    
+    function escapeHtml(str) { if(!str) return ""; return String(str).replace(/[&<>]/g, m=>(m==='&'?'&amp;':m==='<'?'&lt;':'&gt;')); }
+    function parseTimestampToSeconds(ts) { if(!ts) return 0; let p=ts.split(':'); if(p.length===2) return +p[0]*60+ +p[1]; if(p.length===3) return +p[0]*3600+ +p[1]*60+ +p[2]; return 0; }
+    function parseStreamDate(dateStr) { if(!dateStr) return null; return dateStr.split(' ')[0]; }
+    
+    function applyAllFilters() {
+        let result = [...globalVideos];
+        if (textSearchQuery.trim()) {
+            const lower = textSearchQuery.toLowerCase();
+            result = result.filter(v => (v.title||"").toLowerCase().includes(lower) || (v.video_id||"").toLowerCase().includes(lower) ||
+                v.songs.some(s => (s.song&&s.song.toLowerCase().includes(lower)) || (s.artist&&s.artist.toLowerCase().includes(lower))));
+        }
+        if (activeFilters.dateFrom) result = result.filter(v => { const d = parseStreamDate(v.stream_date); return d && d >= activeFilters.dateFrom; });
+        if (activeFilters.dateTo) result = result.filter(v => { const d = parseStreamDate(v.stream_date); return d && d <= activeFilters.dateTo; });
+        const sort = activeFilters.sortBy;
+        result.sort((a,b) => {
+            if (sort === "date_desc") return (parseStreamDate(b.stream_date)||"0").localeCompare(parseStreamDate(a.stream_date)||"0");
+            if (sort === "date_asc") return (parseStreamDate(a.stream_date)||"0").localeCompare(parseStreamDate(b.stream_date)||"0");
+            if (sort === "songcount_desc") return (b.song_count||0) - (a.song_count||0);
+            if (sort === "title_asc") return (a.title||"").localeCompare(b.title||"");
+            return 0;
+        });
+        filteredVideos = result;
+        displayedCount = 20;
+        renderVideos();
+        updateFilterStatsText();
+    }
+    
+    function renderVideos() {
+        const container = document.getElementById("videoGrid");
+        if (!filteredVideos.length) {
+            container.innerHTML = `<div class="glass-panel" style="padding:2rem; text-align:center;">${t("noVideosMatch")}</div>`;
+            return;
+        }
+        const toShow = filteredVideos.slice(0, displayedCount);
+        container.innerHTML = toShow.map((video, idx) => {
+            const streamDate = parseStreamDate(video.stream_date) || t("dateUnknown");
+            return `<div class="video-card" data-video-idx="${idx}">
+                        <h4 style="color:#b9f2ff; margin-bottom:8px;">${escapeHtml(video.title?.substring(0,72)||"")}</h4>
+                        <div style="display:flex; justify-content:space-between; font-size:0.7rem; margin-bottom:8px;">
+                            <span>🆔 ${video.video_id}</span>
+                            <span>📅 ${streamDate}</span>
+                            <span>🎵 ${video.song_count} ${t("songsUnit")}</span>
+                        </div>
+                        ${video.songs.slice(0,3).map(s => `<div style="display:flex; justify-content:space-between; font-size:0.8rem; padding:0.3rem 0;">
+                            <span>🎤 ${escapeHtml(s.song)} — ${escapeHtml(s.artist)}</span>
+                            <span class="timestamp-badge">${s.timestamp||"—"}</span>
+                        </div>`).join("")}
+                        ${video.songs.length>3?`<div style="font-size:0.7rem; margin-top:6px; opacity:0.8;">+${video.songs.length-3} ${t("moreSongs")}</div>`:""}
+                    </div>`;
+        }).join("");
+        document.querySelectorAll('.video-card').forEach(card => {
+            card.addEventListener('click', () => { const i = parseInt(card.getAttribute('data-video-idx'),10); if(!isNaN(i) && filteredVideos[i]) showVideoModal(filteredVideos[i]); });
+        });
+        isLoadingMore = false;
+        checkAndLoadMore();
+    }
+    
+    function checkAndLoadMore() {
+        if (!filteredVideos.length) return;
+        if (displayedCount >= filteredVideos.length) return;
+        if (isLoadingMore) return;
+        const sentinel = document.getElementById('scrollSentinel');
+        if (!sentinel) return;
+        const rect = sentinel.getBoundingClientRect();
+        if (rect.top < window.innerHeight + 100) loadMoreVideos();
+    }
+    
+    function loadMoreVideos() {
+        if (isLoadingMore) return;
+        if (displayedCount >= filteredVideos.length) return;
+        isLoadingMore = true;
+        displayedCount = Math.min(displayedCount + 20, filteredVideos.length);
+        renderVideos();
+        setTimeout(() => { isLoadingMore = false; checkAndLoadMore(); }, 120);
+    }
+    
+    function showVideoModal(video) {
+        document.getElementById("modalTitle").innerHTML = `🎥 ${escapeHtml(video.title)}`;
+        let songsHtml = `<div><strong>📋 ${t("setlist")} (${video.song_count} ${t("songsUnit")})</strong><ul style="margin-top:10px;">`;
+        video.songs.forEach((s,idx) => { 
+            const tsec = parseTimestampToSeconds(s.timestamp); 
+            const url = `https://www.youtube.com/watch?v=${video.video_id}&t=${tsec}`; 
+            songsHtml += `<li style="background:#0a2337; margin:8px 0; padding:10px; border-radius:14px;">
+                            <strong>${idx+1}. ${escapeHtml(s.song)}</strong> — ${escapeHtml(s.artist)}<br>
+                            <small>⏱️ ${s.timestamp} → <a href="${url}" target="_blank">${t("watchMoment")}</a></small>
+                          </li>`; 
+        });
+        const streamDate = parseStreamDate(video.stream_date) || t("dateUnknown");
+        songsHtml += `</ul><div style="margin-top:12px;">📅 ${t("streamDate")}: ${streamDate}</div></div>`;
+        document.getElementById("modalBody").innerHTML = songsHtml;
+        document.getElementById("modalExtraLink").innerHTML = `<a href="https://www.youtube.com/watch?v=${video.video_id}" target="_blank" style="background:#5bc0ff; padding:8px 22px; border-radius:40px; display:inline-block; color:#02131f; font-weight:600;">${t("watchFull")}</a>`;
+        document.getElementById("analyticsModal").style.display = "flex";
+    }
+    
+    function renderSongsTable() {
+        if (!allSongsArray.length) { document.getElementById("songsTableBody").innerHTML = `<tr><td colspan="2">${t("noVideosMatch")}</td></tr>`; return; }
+        let sorted = [...allSongsArray];
+        if (currentSongSort.field === "name") sorted.sort((a,b) => currentSongSort.direction === "asc" ? a.song.localeCompare(b.song) : b.song.localeCompare(a.song));
+        else sorted.sort((a,b) => currentSongSort.direction === "asc" ? a.count - b.count : b.count - a.count);
+        const tbody = document.getElementById("songsTableBody");
+        tbody.innerHTML = sorted.map(song => `<tr data-song-name="${escapeHtml(song.song)}"><td style="color:#b9f2ff;">${escapeHtml(song.song)}</td><td><strong>${song.count}</strong> ${t("songsUnit")}</td></tr>`).join('');
+        document.querySelectorAll("#songsTableBody tr").forEach(row => row.addEventListener("click", () => showFullSongDetail(row.getAttribute("data-song-name"))));
+    }
+    
+    function showFullSongDetail(songName) {
+        if (!songName) return;
+        const songData = allSongsArray.find(s => s.song === songName);
+        if (!songData) return;
+        const occurrences = [];
+        for (const v of globalVideos) { const found = v.songs.find(s => s.song === songName); if (found) occurrences.push({video: v, song: found}); }
+        let html = `<div class="detail-card"><h3>🎵 ${escapeHtml(songData.song)}</h3><p><strong>${t("totalPerformancesDetail")}:</strong> ${songData.count}</p><p><strong>${t("artistsWhoPerformed")}:</strong> ${songData.artists.map(a=>escapeHtml(a)).join(', ')}</p><p><strong>${t("appearsInVideos")} (${occurrences.length}):</strong></p><ul>`;
+        occurrences.forEach(occ => { const tsec = parseTimestampToSeconds(occ.song.timestamp); const url = `https://www.youtube.com/watch?v=${occ.video.video_id}&t=${tsec}`; html += `<li><strong>${escapeHtml(occ.video.title)}</strong> — ${occ.song.timestamp} <a href="${url}" target="_blank">${t("watch")}</a></li>`; });
+        html += `</ul></div>`;
+        document.getElementById("songDetailContainer").innerHTML = html;
+        document.getElementById("songDetailContainer").scrollIntoView({ behavior: "smooth" });
+    }
+    
+    function renderArtistsTable() {
+        if (!allArtistsArray.length) { document.getElementById("artistsTableBody").innerHTML = `<tr><td colspan="2">${t("noVideosMatch")}</td></tr>`; return; }
+        let sorted = [...allArtistsArray];
+        if (currentArtistSort.field === "name") sorted.sort((a,b) => currentArtistSort.direction === "asc" ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name));
+        else sorted.sort((a,b) => currentArtistSort.direction === "asc" ? a.total_performances - b.total_performances : b.total_performances - a.total_performances);
+        const tbody = document.getElementById("artistsTableBody");
+        tbody.innerHTML = sorted.map(artist => `<tr data-artist-name="${escapeHtml(artist.name)}"><td style="color:#b9f2ff;">${escapeHtml(artist.name)}</td><td><strong>${artist.total_performances}</strong> ${t("songsUnit")}</td></tr>`).join('');
+        document.querySelectorAll("#artistsTableBody tr").forEach(row => row.addEventListener("click", () => showFullArtistDetail(row.getAttribute("data-artist-name"))));
+    }
+    
+    function showFullArtistDetail(artistName) {
+        if (!artistName) return;
+        const artistData = allArtistsArray.find(a => a.name === artistName);
+        if (!artistData) return;
+        const videosWithArtist = [];
+        for (const v of globalVideos) { const matched = v.songs.filter(s => s.artist === artistName); if (matched.length) videosWithArtist.push({video: v, songs: matched}); }
+        let html = `<div class="detail-card"><h3>🎸 ${escapeHtml(artistData.name)}</h3><p><strong>${t("totalPerformancesArtist")}:</strong> ${artistData.total_performances}</p><p><strong>${t("uniqueSongs")}:</strong> ${Object.keys(artistData.songs).length}</p><p><strong>${t("appearsInStreams")}:</strong></p>`;
+        for (const item of videosWithArtist) { html += `<div style="margin-top:0.8rem; background:#031c2b; padding:0.8rem; border-radius:1rem;"><strong>${escapeHtml(item.video.title)}</strong><ul>`; for (const s of item.songs) { const tsec = parseTimestampToSeconds(s.timestamp); const url = `https://www.youtube.com/watch?v=${item.video.video_id}&t=${tsec}`; html += `<li>🎶 ${escapeHtml(s.song)} — <a href="${url}" target="_blank">⏱️ ${s.timestamp}</a></li>`; } html += `</ul></div>`; }
+        html += `</div>`;
+        document.getElementById("artistDetailContainer").innerHTML = html;
+        document.getElementById("artistDetailContainer").scrollIntoView({ behavior: "smooth" });
+    }
+    
+    function updateStatsUI() {
+        document.getElementById("totalVideos").innerText = globalVideos.length;
+        const totalPerformances = globalVideos.reduce((sum, v) => sum + (v.songs?.length || 0), 0);
+        document.getElementById("totalSongs").innerText = totalPerformances.toLocaleString();
+        let uniqueArtists = new Set();
+        globalVideos.forEach(v => v.songs.forEach(s => { if(s.artist) uniqueArtists.add(s.artist); }));
+        document.getElementById("totalArtists").innerText = uniqueArtists.size;
+    }
+    
+    async function loadData() {
+        try {
+            const resp = await fetch('setlist_data.json');
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            const data = await resp.json();
+            globalVideos = data.videos || [];
+            allSongsArray = data.all_songs || [];
+            allArtistsArray = data.all_artists || [];
+            updateStatsUI();
+            applyAllFilters();
+            renderSongsTable();
+            renderArtistsTable();
+        } catch(e) {
+            console.error(e);
+            document.getElementById("videoGrid").innerHTML = `<div class="glass-panel" style="padding:2rem; color:#ffaeae;">❌ setlist_data.json not found. Make sure the file exists.</div>`;
+        }
+    }
+    
+    function setupSorting(tableId, sortState, renderFunc) {
+        const th = document.querySelectorAll(`#${tableId} th`);
+        th.forEach(header => {
+            header.addEventListener("click", () => {
+                const field = header.getAttribute("data-sort");
+                if (sortState.field === field) sortState.direction = sortState.direction === "asc" ? "desc" : "asc";
+                else { sortState.field = field; sortState.direction = "desc"; }
+                renderFunc();
+                th.forEach(h => h.innerHTML = h.innerHTML.replace(/ ⬍| ⬏| ⬎/g, ''));
+                const arrow = sortState.direction === "asc" ? " ⬏" : " ⬎";
+                header.innerHTML = header.innerHTML.replace(/ ⬍| ⬏| ⬎/, '') + arrow;
+            });
+        });
+    }
+    
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.getElementById(`${tabId}Tab`).classList.add('active');
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-tab') === tabId) btn.classList.add('active');
+        });
+        if (tabId === 'songs') renderSongsTable();
+        if (tabId === 'artists') renderArtistsTable();
+    }
+    
+    function setLanguage(lang) {
+        currentLang = lang;
+        document.documentElement.lang = lang === "jp" ? "ja" : "en";
+        document.querySelectorAll(".lang-btn").forEach(btn => btn.classList.remove("active"));
+        document.querySelector(`.lang-btn[data-lang="${lang}"]`).classList.add("active");
+        updateStaticTexts();
+    }
+    
+    // Event listeners
+    document.getElementById("applyFiltersBtn").addEventListener("click", () => {
+        activeFilters.dateFrom = document.getElementById("dateFrom").value;
+        activeFilters.dateTo = document.getElementById("dateTo").value;
+        activeFilters.sortBy = document.getElementById("sortBy").value;
+        applyAllFilters();
+    });
+    document.getElementById("resetFiltersBtn").addEventListener("click", () => {
+        document.getElementById("dateFrom").value = ""; document.getElementById("dateTo").value = "";
+        document.getElementById("sortBy").value = "date_desc"; document.getElementById("searchInput").value = "";
+        textSearchQuery = ""; activeFilters = { dateFrom: "", dateTo: "", sortBy: "date_desc" };
+        applyAllFilters();
+    });
+    document.getElementById("searchInput").addEventListener("input", (e) => { textSearchQuery = e.target.value; applyAllFilters(); });
+    document.getElementById("searchSongBtn").addEventListener("click", () => { const name = document.getElementById("songSearchInput").value.trim(); if(name) showFullSongDetail(name); });
+    document.getElementById("searchArtistBtn").addEventListener("click", () => { const name = document.getElementById("artistSearchInput").value.trim(); if(name) showFullArtistDetail(name); });
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.getAttribute('data-tab'))));
+    document.querySelectorAll(".lang-btn").forEach(btn => btn.addEventListener("click", () => setLanguage(btn.getAttribute("data-lang"))));
+    
+    const modal = document.getElementById("analyticsModal");
+    modal.addEventListener("click", (e) => { if(e.target === modal || e.target.classList.contains("close-modal")) modal.style.display = "none"; });
+    window.addEventListener('scroll', () => { if (!isLoadingMore) checkAndLoadMore(); });
+    window.addEventListener('resize', () => { if (!isLoadingMore) checkAndLoadMore(); });
+    setTimeout(() => {
+        if (window.IntersectionObserver) {
+            const observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting && !isLoadingMore) loadMoreVideos();
+            }, { threshold: 0.1, rootMargin: "0px 0px 150px 0px" });
+            const sentinel = document.getElementById('scrollSentinel');
+            if (sentinel) observer.observe(sentinel);
+        }
+    }, 300);
+    
+    setupSorting("songsTable", currentSongSort, renderSongsTable);
+    setupSorting("artistsTable", currentArtistSort, renderArtistsTable);
+    loadData();
+</script>
+</body>
+</html>
